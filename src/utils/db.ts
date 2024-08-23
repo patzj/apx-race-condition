@@ -32,7 +32,8 @@ async function unlockTables(conn: mysql.Connection) {
 
 export async function initialize() {
   const conn = await connect();
-  await conn.execute(`CREATE DATABASE IF NOT EXISTS ${database}`);
+  await conn.execute(`DROP DATABASE IF EXISTS ${database}`);
+  await conn.execute(`CREATE DATABASE ${database}`);
   await conn.end();
 }
 
