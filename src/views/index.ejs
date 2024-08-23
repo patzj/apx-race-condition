@@ -1,9 +1,9 @@
 <%- include("partials/header") %>
 <body class="h-screen w-screen space-y-48">
     <header class="flex justify-between p-4">
-        <h1 class="font-bold text-4xl">Gift Shop</h1>
+        <h1 class="font-bold text-4xl"><a href="/">Gift Shop</a></h1>
         <div class="flex space-x-4 items-center">
-            <a href="#" class="btn btn-primary">Redeem Your Gift Card</a>
+            <a href="/redeem" class="btn btn-primary">Redeem Your Gift Card</a>
             <p class="font-bold">Balance: <%= balance %></p>
         </div>
     </header>
@@ -43,6 +43,14 @@
     <footer class="container mx-auto w-2/4">
         <% if (code) { %>
         <div class="alert">Code: <%= code %></div>
+        <% } %>
+
+        <% if (flag) { %>
+            <div class="alert alert-success">Flag: <%= flag %></div>
+        <% } %>
+
+        <% if (error) { %>
+            <div class="alert alert-error"><%= error %></div>
         <% } %>
     </footer>
 

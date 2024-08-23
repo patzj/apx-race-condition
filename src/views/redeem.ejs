@@ -1,0 +1,32 @@
+<%- include("partials/header") %>
+<body class="h-screen w-screen space-y-48">
+    <header class="flex justify-between p-4">
+        <h1 class="font-bold text-4xl"><a href="/">Gift Shop</a></h1>
+        <div class="flex space-x-4 items-center">
+            <a href="/redeem" class="btn btn-primary">Redeem Your Gift Card</a>
+            <p class="font-bold">Balance: <%= balance %></p>
+        </div>
+    </header>
+
+    <main class="container mx-auto w-2/4">
+        <div class="flex justify-center">
+            <form action="/redeem" method="POST" class="flex flex-col items-center justify-center space-y-2">
+                <input type="text" name="code" placeholder="Gift Card Code" class="input input-bordered w-full max-w-xs" />
+                <button class="btn btn-secondary w-full">Redeem</button>
+            </form>
+        </div>
+    </main>
+    
+    <footer class="container mx-auto w-2/4">
+        <% if (success) { %>
+        <div class="alert alert-success"><%= success %></div>
+        <% } %>
+
+        <% if (error) { %>
+        <div class="alert alert-error"><%= error %></div>
+        <% } %>
+    </footer>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+</body>
+<%- include("partials/footer") %>

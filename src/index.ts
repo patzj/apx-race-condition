@@ -3,7 +3,7 @@ import session from "express-session";
 
 import path from "node:path";
 import {
-  buyVoucher,
+  buyItem,
   getBalance,
   initialize,
   redeemVoucher,
@@ -47,6 +47,7 @@ app.get("/", async (req: Request, res: Response) => {
   return res.render("index", {
     page: "Home",
     code: "",
+    flag: "",
     error: "",
     balance: toCurrency(balance),
   });
@@ -60,17 +61,22 @@ app.post("/", async (req: Request, res: Response) => {
 
   let balance = 0;
   let code = "";
+  let flag = "";
+
   try {
     const { itemId } = req.body;
-    const result = await buyVoucher(accountId, itemId);
+    const result = await buyItem(accountId, itemId);
 
     balance = result.balance;
     code = result.code;
+    flag = result.flag;
   } catch (err: any) {
     console.error(err);
     return res.render("index", {
       page: "Home",
       code,
+      flag,
+      error: err.message,
       balance: toCurrency(balance),
     });
   }
@@ -78,6 +84,23 @@ app.post("/", async (req: Request, res: Response) => {
   return res.render("index", {
     page: "Home",
     code,
+    flag,
+    error: "",
+    balance: toCurrency(balance),
+  });
+});
+
+app.get("/redeem", async (req: Request, res: Response) => {
+  const { accountId } = req.session;
+  if (!accountId) {
+    return res.redirect("/");
+  }
+
+  const balance = await getBalance(accountId);
+  return res.render("redeem", {
+    page: "Redeem Gift Card",
+    error: "",
+    success: "",
     balance: toCurrency(balance),
   });
 });
@@ -93,9 +116,23 @@ app.post("/redeem", async (req: Request, res: Response) => {
     await redeemVoucher(accountId, code);
   } catch (err: any) {
     console.error(err);
-  } finally {
-    return res.send("OK");
+
+    const balance = await getBalance(accountId);
+    return res.render("redeem", {
+      page: "Redeem Gift Card",
+      error: err.message,
+      success: "",
+      balance: toCurrency(balance),
+    });
   }
+
+  const balance = await getBalance(accountId);
+  return res.render("redeem", {
+    page: "Redeem Gift Card",
+    error: "",
+    success: "Balance updated.",
+    balance: toCurrency(balance),
+  });
 });
 
 (async () => {

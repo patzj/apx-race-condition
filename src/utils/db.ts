@@ -39,24 +39,13 @@ export async function initialize() {
 export async function seed() {
   const conn = await connect(database);
 
-  try {
-    await Promise.all([
-      conn.execute(
-        "CREATE TABLE voucher (code TEXT, value REAL, used BOOLEAN)"
-      ),
-      conn.execute(
-        "CREATE TABLE account (id SERIAL, email TEXT, balance REAL)"
-      ),
-    ]);
+  await Promise.all([
+    conn.execute("CREATE TABLE voucher (code TEXT, value REAL, used BOOLEAN)"),
+    conn.execute("CREATE TABLE account (id SERIAL, email TEXT, balance REAL)"),
+  ]);
 
-    await conn.query(
-      "INSERT INTO account VALUES (69, 'user@email.com', 10.00)"
-    );
-  } catch (err) {
-    // pass
-  } finally {
-    conn.end();
-  }
+  await conn.query("INSERT INTO account VALUES (69, 'user@email.com', 10.00)");
+  await conn.end();
 }
 
 export async function getBalance(accountId: string | number): Promise<number> {
@@ -75,7 +64,7 @@ export async function getBalance(accountId: string | number): Promise<number> {
   return balance;
 }
 
-export async function buyVoucher(accountId: string, itemId: string) {
+export async function buyItem(accountId: string, itemId: string) {
   const conn = await connect(database);
   await conn.beginTransaction();
   await lockTables(conn);
@@ -83,6 +72,8 @@ export async function buyVoucher(accountId: string, itemId: string) {
   let balance = 0;
   let value = 0;
   let code = "";
+  let flag = "";
+
   try {
     const [results]: any[][] = await conn.query(
       "SELECT balance FROM account WHERE id=?",
@@ -96,21 +87,21 @@ export async function buyVoucher(accountId: string, itemId: string) {
     switch (itemId) {
       case "1":
         value = 10;
+        code = uuidv4();
         break;
       case "0":
         value = 100;
+        flag = "APX{R@c3_t0_th3_F1n1$h}";
         break;
       default:
-        throw new Error("Item not found");
+        throw new Error("Item not found.");
     }
 
     if (value > balance) {
-      throw new Error("Insufficient balance");
+      throw new Error("Insufficient balance.");
     }
 
-    code = uuidv4();
     balance -= value;
-
     await Promise.all([
       conn.query("INSERT INTO voucher VALUES (?,?,?)", [code, value, false]),
       conn.query("UPDATE account SET balance=? WHERE id=?", [
@@ -119,14 +110,15 @@ export async function buyVoucher(accountId: string, itemId: string) {
       ]),
     ]);
     await conn.commit();
-  } catch (err) {
-    console.error(err);
+  } catch (err: any) {
     await conn.rollback();
+    throw new Error(err.message);
   } finally {
     unlockTables(conn);
-    conn.end();
-    return { code, balance };
+    await conn.end();
   }
+
+  return { flag, code, balance };
 }
 
 export async function redeemVoucher(accountId: string, code: string) {
@@ -142,6 +134,8 @@ export async function redeemVoucher(accountId: string, code: string) {
     let value = 0;
     if (vouchers.length === 1) {
       value = vouchers[0]["value"];
+    } else {
+      throw new Error("Invalid gift card.");
     }
 
     await Promise.all([
@@ -152,11 +146,11 @@ export async function redeemVoucher(accountId: string, code: string) {
       ]),
     ]);
 
-    conn.commit();
-  } catch (err) {
-    conn.rollback();
-    console.error(err);
+    await conn.commit();
+  } catch (err: any) {
+    await conn.rollback();
+    throw new Error(err.message);
   } finally {
-    conn.end();
+    await conn.end();
   }
 }
