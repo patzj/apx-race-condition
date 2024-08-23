@@ -1,0 +1,28 @@
+{
+  "name": "apx-race-condition",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "build": "npx tsc && cp -r src/views dist/views",
+    "start": "node dist/index.js",
+    "dev": "npx ts-node src/index.ts",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "ejs": "^3.1.10",
+    "express": "^4.19.2",
+    "express-session": "^1.18.0",
+    "pg": "^8.12.0",
+    "typescript": "^5.5.4"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/express-session": "^1.18.0",
+    "@types/pg": "^8.11.6",
+    "ts-node": "^10.9.2"
+  }
+}

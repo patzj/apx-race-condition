@@ -1,0 +1,46 @@
+<%- include("partials/header") %>
+<body class="h-screen w-screen space-y-48">
+    <header class="flex justify-between p-4">
+        <h1 class="font-bold text-4xl">Gift Shop</h1>
+        <div class="flex space-x-4 items-center">
+            <a href="#" class="btn btn-primary">Claim Your Gift Card</a>
+            <p class="font-bold">Balance: <%= balance %></p>
+        </div>
+    </header>
+
+    <main class="container mx-auto w-2/4">
+        <div class="flex justify-around">
+            <div class="card bg-base-100 w-72 shadow-xl">
+                <figure class="bg-current">
+                    <img src="card.svg" alt="Gift Card" />
+                </figure>
+                <div class="card-body">
+                    <h2 class="card-title">$10 Gift Card</h2>
+                    <p>Price: $10.00</p>
+                    <form action="" method="POST">
+                        <input type="hidden" name="item" value="card" />
+                        <button class="btn btn-secondary w-full">Buy Now</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="card bg-base-100 w-72 shadow-xl">
+                <figure class="bg-current">
+                    <img src="box.svg" alt="Mystery Box" />
+                </figure>
+                <div class="card-body">
+                    <h2 class="card-title">Mystery Box</h2>
+                    <p>Price: $100.00</p>
+                    <form action="" method="POST">
+                        <input type="hidden" name="item" value="box" />
+                        <button class="btn btn-secondary w-full">Buy Now</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+    </div>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+</body>
+<%- include("partials/footer") %>
