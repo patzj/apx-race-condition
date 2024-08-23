@@ -3,7 +3,7 @@
     <header class="flex justify-between p-4">
         <h1 class="font-bold text-4xl">Gift Shop</h1>
         <div class="flex space-x-4 items-center">
-            <a href="#" class="btn btn-primary">Claim Your Gift Card</a>
+            <a href="#" class="btn btn-primary">Redeem Your Gift Card</a>
             <p class="font-bold">Balance: <%= balance %></p>
         </div>
     </header>
@@ -18,7 +18,7 @@
                     <h2 class="card-title">$10 Gift Card</h2>
                     <p>Price: $10.00</p>
                     <form action="" method="POST">
-                        <input type="hidden" name="item" value="card" />
+                        <input type="hidden" name="itemId" value="1" />
                         <button class="btn btn-secondary w-full">Buy Now</button>
                     </form>
                 </div>
@@ -32,14 +32,19 @@
                     <h2 class="card-title">Mystery Box</h2>
                     <p>Price: $100.00</p>
                     <form action="" method="POST">
-                        <input type="hidden" name="item" value="box" />
+                        <input type="hidden" name="itemId" value="0" />
                         <button class="btn btn-secondary w-full">Buy Now</button>
                     </form>
                 </div>
             </div>
         </div>
     </main>
-    </div>
+    
+    <footer class="container mx-auto w-2/4">
+        <% if (code) { %>
+        <div class="alert">Code: <%= code %></div>
+        <% } %>
+    </footer>
 
     <script src="https://cdn.tailwindcss.com"></script>
 </body>
