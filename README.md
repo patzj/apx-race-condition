@@ -19,3 +19,7 @@ docker compose build
 ```sh
 docker compose up
 ```
+
+## Default Credentials
+
+`john:ripper`
